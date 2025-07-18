@@ -33,7 +33,7 @@ jobs:
         run: mvn clean verify
 
       - name: Upload JaCoCo report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: |
@@ -61,7 +61,7 @@ jobs:
         working-directory: frontend
 
       - name: Upload Angular coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: angular-coverage
           path: frontend/coverage
