@@ -1,4 +1,4 @@
-name: SonarCloud Analysis - Back
+name: SonarCloud Analysis
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  sonarcloud-back:
+    name: SonarCloud - Back
     runs-on: ubuntu-latest
 
     defaults:
@@ -34,9 +34,38 @@ jobs:
       - name: Build with Maven
         run: mvn clean verify
 
-      - name: SonarCloud Scan
+      - name: SonarCloud Scan - Back
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           projectBaseDir: ./back
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  sonarcloud-front:
+    name: SonarCloud - Front
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./front
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Angular tests with coverage
+        run: npm run test -- --watch=false --code-coverage
+
+      - name: SonarCloud Scan - Front
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: ./front
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONT }}
